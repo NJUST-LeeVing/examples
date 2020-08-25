@@ -1,0 +1,207 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+//创建人
+class Person {
+public:
+	string name;
+	int age;
+	string phoneNum;
+	string address;
+};
+
+//创建电话本
+class Book {
+public:
+	int size;
+	Person personArray[1000];
+};
+
+//菜单界面
+void menu()
+{
+	cout << "*************************" << endl;
+	cout << "******1、添加联系人******" << endl;
+	cout << "******2、显示联系人******" << endl;
+	cout << "******3、查找联系人******" << endl;
+	cout << "******4、修改联系人******" << endl;
+	cout << "******5、删除联系人******" << endl;
+	cout << "******6、清空联系人******" << endl;
+	cout << "******0、退出通信录******" << endl;
+	cout << "*************************" << endl;
+}
+
+//查找引擎：
+int findEngine(Book* book, string name) {
+	for (int i = 0; i < book->size; i++) {
+		if (name == book->personArray[i].name) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+//添加联系人
+void addPerson(Book* book) {
+	string name;
+	int age;
+	string phoneNum;
+	string address;
+
+	cout << "请输入姓名：";
+	cin >> name;
+	cout << "请输入年龄：";
+	cin >> age;
+	cout << "请输入电话号码：";
+	cin >> phoneNum;
+	cout << "请输入家庭住址：";
+	cin >> address;
+
+	book->personArray[book->size].name = name;
+	book->personArray[book->size].age = age;
+	book->personArray[book->size].phoneNum = phoneNum;
+	book->personArray[book->size].address = address;
+
+	book->size++;
+	cout << "添加成功！" << endl;
+}
+
+//显示联系人
+void showPerson(Book* book) {
+	if (book->size == 0) {
+		cout << "通讯录中暂未添加任何人！" << endl;
+	}
+	else {
+		for (int i = 0; i < book->size; i++) {
+			cout << "  姓名：" << book->personArray[i].name << "  年龄：" << book->personArray[i].age << "  联系电话：" << book->personArray[i].phoneNum << "  家庭住址：" << book->personArray[i].address << endl;
+		}
+	}
+}
+
+//查找联系人
+void findPerson(Book* book) {
+	string name;
+	cout << "请输入联系人的姓名：";
+	cin >> name;
+	int ret = findEngine(book, name);
+	if (ret == -1) {
+		cout << "查无此人！" << endl;
+	}
+	else {
+		cout << "查找到此人！" << endl;
+		cout << "  姓名：" << book->personArray[ret].name << "  年龄：" << book->personArray[ret].age << "  联系电话：" << book->personArray[ret].phoneNum << "  家庭住址：" << book->personArray[ret].address << endl;
+	}
+}
+
+//修改联系人
+void changePerson(Book* book) {
+	string name;
+	int age;
+	string phoneNum;
+	string address;
+
+	cout << "请输入联系人姓名：";
+	cin >> name;
+	int ret = findEngine(book, name);
+	
+	if (ret == -1) {
+		cout << "查无此人！" << endl;
+	}
+	else {
+		cout << "查找到此人！" << endl;
+		
+		cout << "请输入修改后的姓名：";
+		cin >> name;
+		cout << "请输入修改后的年龄：";
+		cin >> age;
+		cout << "请输入修改后的电话号码：";
+		cin >> phoneNum;
+		cout << "请输入修改后的家庭住址：";
+		cin >> address;
+
+		book->personArray[ret].name = name;
+		book->personArray[ret].age = age;
+		book->personArray[ret].phoneNum = phoneNum;
+		book->personArray[ret].address = address;
+	}
+}
+
+//删除联系人
+void deletePerson(Book* book) {
+	string name;
+	cout << "请输入联系人姓名：";
+	cin >> name;
+	int ret = findEngine(book, name);
+
+	if (ret == -1) {
+		cout << "查无此人！" << endl;
+	}
+	else {
+		for (int i = ret; i < book->size - 1; i++) {
+			book->personArray[i] = book->personArray[i + 1];
+		}
+		book->size--;
+		cout << "删除成功！" << endl;
+	}
+
+}
+
+//清空通讯录
+void clearPerson(Book* book) {
+	string select;
+	cout << "您确定清空所有联系人？yes/no" << endl;
+	cin >> select;
+	if (select == "yes") {
+		book->size = 0;
+		cout << "清空成功！" << endl;
+	}
+	else if (select=="no") {
+		cout << "取消清空！" << endl;
+	}
+	else {
+		cout << "输入无效，请重新输入！" << endl;
+	}
+	
+}
+
+int main() {
+	Book* book = new Book;
+	book->size = 0;
+	while (true)
+	{
+		menu();
+		cout << "请输入选项：";
+		int selectNum;
+		cin >> selectNum;
+		switch (selectNum)
+		{
+		case 1:
+			addPerson(book);
+			break;
+		case 2:
+			showPerson(book);
+			break;
+		case 3:
+			findPerson(book);
+			break;
+		case 4:
+			changePerson(book);
+			break;
+		case 5:
+			deletePerson(book);
+			break;
+		case 6:
+			clearPerson(book);
+			break;
+		case 0:
+			cout << "退出成功！" << endl;
+			system("pause");
+			return 0;
+		}
+		system("pause");
+		system("cls");
+	}
+	system("pause");
+	return 0;
+}
