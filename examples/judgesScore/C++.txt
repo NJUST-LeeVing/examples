@@ -1,0 +1,79 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<deque>
+#include<ctime>
+#include<algorithm>
+using namespace std;
+
+/*
+ *设置“人类”有姓名和分数这两个成员变量。
+ *创建5个人，放入一个vector容器中。
+ *每个人都对应10个评委打分。
+ *将每个评委的分数放入deque容器中，方便去掉最高分和最低分。
+ *将deque容器中的分数赋给每个人。
+*/
+
+class Person {
+public:
+	Person() {}
+	Person(string name, int score) {
+		this->m_Name = name;
+		this->m_Score = score;
+	}
+	~Person() {}
+
+	string m_Name;
+	int m_Score = 0;
+};
+
+void creatPersonInVector(vector<Person>& v) {
+	string NameSeed = "ABCDE";
+	for (int i = 0; i < 5; i++) {
+		string name = "选手";
+		name += NameSeed[i];
+		int score = 0;
+		Person p(name, score);
+		v.push_back(p);
+	}
+}
+
+void setAndShowScore(vector<Person>& v) {
+	for (vector<Person>::iterator it = v.begin(); it != v.end(); it++) {
+		deque<int>d;
+		for (int i = 0; i < 10; i++) {
+			int score = rand() % 41 + 60;
+			d.push_back(score);
+		}
+		sort(d.begin(), d.end());
+		d.pop_back();
+		d.pop_front();
+		int score = 0;
+		for (int i = 0; i < d.size(); i++) {
+			score += d[i];
+		}
+		int avarageScore = score / d.size();
+
+		it->m_Score = avarageScore;
+		cout << "选手" << it->m_Name << "的平均分数为：" << it->m_Score << endl;
+		cout << "选手"<< it->m_Name <<"的分数为：";
+		for (deque<int>::iterator it = d.begin(); it != d.end(); it++) {
+			cout << *it << " ";
+		}
+		cout << endl;
+	}
+}
+
+int main() {
+	srand((unsigned)time(NULL));
+	
+	vector<Person>v;
+
+	creatPersonInVector(v);
+
+	setAndShowScore(v);
+
+	system("pause");
+
+	return 0;
+}
